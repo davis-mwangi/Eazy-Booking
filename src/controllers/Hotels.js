@@ -1,6 +1,7 @@
 import moment from 'moment';
 import uuidv4 from 'uuid/v4';
 import db from '../db';
+import uploadFile from './UploadFile';
 
 const Hotel = {
     /**
@@ -11,10 +12,11 @@ const Hotel = {
      */
     async create(req, res) {
         const queryText = `INSERT INTO
-        hotels (id, name, description, location,conference_halls,
-            capacity,date_created, date_modified)
-        VALUES($1, $2, $3, $4, $5, $6, $7, $8)
+        hotels (id, name, description, location, conference_halls, capacity, 
+            owner_id, created_date, modified_date)
+        VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
         returning *`;
+
 
         const values = [
             uuidv4(),
@@ -23,6 +25,7 @@ const Hotel = {
             req.body.location,
             req.body.conference_halls,
             req.body.capacity,
+            req.user.id,
             moment(new Date()),
             moment(new Date())
         ];
@@ -40,7 +43,7 @@ const Hotel = {
      * @param {object} res
      * @returns {object} hotels array
      */
-    async getll(req, res) {
+    async getAll(req, res) {
         const findAllQuery = 'SELECT * FROM hotels';
         try{
             const { rows, rowCount} = await db.query(findAllQuery);
@@ -68,14 +71,14 @@ const Hotel = {
      * Update a Hotel
      */
     async update(req, res){
-        const findOneQuery = 'SELECT * FROM hotels WHERE id = $1';
+        const findOneQuery = 'SELECT * FROM hotels WHERE id = $1 AND owner_id=$2';
         const updateQuery = `UPDATE hotels
           SET name=$1, description=$2, location=$3,conference_halls=$4,
-          capacity=$5,date_modified=$6
-          WHERE id = $7 returning *`;
+          capacity=$5,modified_date=$6
+          WHERE id = $7 AND owner_id=$8 returning *`;
         
           try{
-              const { rows } = await db.query(findOneQuery, [req.params.id]);
+              const { rows } = await db.query(findOneQuery, [req.params.id, req.user.id]);
               if(!rows[0]){
                   return res.status(404).send({'message': 'Hotel not found'});
               }
@@ -86,7 +89,8 @@ const Hotel = {
                 req.body.conference_halls || rows[0].conference_halls,
                 req.body.capacity || rows[0].capacity,
                 moment(new Date()),
-                req.params.id
+                req.params.id,
+                req.user.id
               ];
               const response =  await db.query(updateQuery, values);
               return res.status(200).send(response.rows[0]);
@@ -99,9 +103,9 @@ const Hotel = {
      * Delete a hotel
      */
     async delete(req, res){
-        const deleteQuery = 'DELETE FROM hotels  WHERE id=$1';
+        const deleteQuery = 'DELETE FROM hotels  WHERE id=$1 AND owner_id=$2';
         try{
-            const { rows } = await db.query(deleteQuery, [req.params.id]);
+            const { rows } = await db.query(deleteQuery, [req.params.id, req.user.id]);
             if(!rows){
                 return res.status(404).send({'message': 'Hotel not found'});
             }
@@ -110,6 +114,7 @@ const Hotel = {
             return res.status(400).send(error);
         }
         
-    }
+    },
+    
 }
 export default Hotel;
