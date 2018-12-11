@@ -2,9 +2,9 @@
 A Simple Conference booking  app built with NodeJs/ExpressJs  and Postgres Database
 
 ## Technologies ##
-Node Js
-Express Framewwork
-PostgreSQL
+Node Js  
+Express Framework  
+PostgreSQL  
 
 
 ## How to run the APP ##
