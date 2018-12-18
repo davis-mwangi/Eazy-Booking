@@ -1,5 +1,5 @@
 # Eazy-Booking
-A Simple Conference booking  app built with NodeJs/ExpressJs  and Postgres Database
+A  Conference booking web app to help users locate hotels and other services based on their current location.
 
 ## Technologies ##
 Node Js  
