@@ -36,7 +36,7 @@ const Helper = {
     const token = jwt.sign({
       userId: id
     },
-      process.env.SECRET_KEY, { expiresIn: '7d' }
+      process.env.SECRET_KEY, { expiresIn: '2d' }
     );
     return token;
   }

@@ -1,7 +1,5 @@
 import { Pool} from 'pg';
 import dotenv from 'dotenv';
-import { resolve } from 'url';
-import { rejects } from 'assert';
 
 dotenv.config();
 

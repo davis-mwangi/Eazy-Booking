@@ -1,7 +1,7 @@
 import moment from 'moment';
 import uuidv4 from 'uuid/v4';
 import db from '../db';
-import uploadFile from './UploadFile';
+
 
 const Hotel = {
     /**
@@ -62,7 +62,7 @@ const Hotel = {
             if(!rows[0]){
                 return res.status(404).send({'message': 'Hotel not found'});
             }
-            return res.status(400).send(rows[0]);
+            return res.status(200).send(rows[0]);
         }catch(error){
             return res.status(400).send(error);
         }

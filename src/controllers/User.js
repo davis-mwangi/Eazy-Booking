@@ -93,7 +93,7 @@ const User = {
   },
   /**
    * Get all Users
-   * ngoose.model('User', userSchema);
+   * 
    */
   async getAll(req, res) {
       const queryAll = 'SELECT * FROM users';
